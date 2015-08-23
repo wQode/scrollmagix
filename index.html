@@ -1,0 +1,127 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <link rel="stylesheet" type="text/css" href="styles.css">
+  <title>area 2527</title>
+
+<!-- Setting up dependencies -->
+  <!-- jquery -->
+  <script src="http://cdnjs.cloudflare.com/ajax/libs/jquery/2.1.3/jquery.min.js"></script>
+  <!-- GreenSock Animation Platform GSAP -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/1.17.2/TweenMax.min.js"></script>
+  <!-- Scrollmagic (loading via cdn)-->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/ScrollMagic/2.0.5/ScrollMagic.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/ScrollMagic/2.0.5/plugins/animation.gsap.js"></script>
+  <!-- <script src="https://cdnjs.cloudflare.com/ajax/libs/ScrollMagic/2.0.3/plugins/debug.addIndicators.js"></script> -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/1.17.0/plugins/ScrollToPlugin.min.js"></script>
+<!-- End of setting up dependencies -->
+</head>
+<body>
+<header role="banner">
+<img src="http://s3-us-west-2.amazonaws.com/s.cdpn.io/392/demo_tophat.png" width="64" height="auto" alt="scroll magic">
+
+  <nav role='navigation'>
+    <a href="#intro" id="intro-anchor">Intro</a> 
+    <a href="#section-1" id="anchor1">Section 1</a>
+    <a href="#section-2" id="anchor2">Section 2</a>
+    <a href="#section-3" id="anchor3">Section 3</a>
+  </nav>
+</header>
+
+<main class="full-screen" id="intro" role="main">
+<section class="full-screen blue" id="start">
+  <h1>Anchor Navigation</h1>
+</section>
+
+<section class="full-screen orange" id="section-1">
+  <div>
+    <p>Section One</p>
+  </div>
+</section>
+
+<section class="full-screen red" id="section-2">
+  <div>
+    <p>Section Two</p>
+  </div>
+</section>
+
+<section class="full-screen blue" id="section-3">
+  <div>
+    <p>Section Three</p>
+  </div>
+</section>
+</main>
+
+<!-- ScrollMagic js coding -->
+<script>
+  // Init controller
+    var controller = new ScrollMagic.Controller({
+      globalSceneOptions: {
+        duration: $('section').height(), 
+        triggerHook: .025, 
+        reverse: true
+      }
+    });
+    
+    var scene1 = new ScrollMagic.Scene({ triggerElement: '#intro' })
+                    .setClassToggle('#intro-anchor', 'active')
+                    .addTo(controller);
+    var scene2 = new ScrollMagic.Scene({ triggerElement: '#section-1' })
+                    .setClassToggle('#anchor1', 'active')
+                    .addTo(controller);
+    var scene3 = new ScrollMagic.Scene({ triggerElement: '#section-2' })
+                    .setClassToggle('#anchor2', 'active')
+                    .addTo(controller);
+    var scene4 = new ScrollMagic.Scene({ triggerElement: '#section-3' })
+                    .setClassToggle('#anchor3', 'active')
+                    .addTo(controller);
+
+    // Animation
+    // Behaviour of controller to animate scroll instead of jump
+    controller.scrollTo(function(target) {
+
+      TweenMax.to(window, 0.5, {
+        scrollTo : {
+          //scroll position of the target along y axis
+          y : target, 
+          //allows user to kill scroll action smoothly
+          autoKill : true 
+        },
+        ease : Cubic.easeInOut
+      });
+
+    });
+
+    // Anchor click event, the trigger
+    // Bind scroll to anchor links
+    // Binding th click even to an anchor tag with an ahref attribute beginning with a #
+
+    $(document).on("click", "a[href^=#]", function(e) {
+      // create a variable that will contain the href attrib value
+      // when an anchor is clicked
+
+      var id = $(this).attr("href"); //grab the href attrib value
+      // so we don't click on empty href attribs,
+      // ensure the length is > 0
+      if($(id).length > 0) {
+        e.preventDefault(); //prevents default behaviour of links
+        // trigger scroll
+        controller.scrollTo(id);
+        // window.history to update the url when the anchors are clicked
+        // the URL will append the hash value to the end of the URL 
+        // window.history.pushState pushes the given data onto 
+        // the session history stack with the specified title
+        // if supported by browser, we can update the URL
+        if (window.history && window.history.pushState) {
+          history.pushState("", document.title, id);
+        }
+      }
+
+    });
+    
+</script>  
+
+
+</body>
+</html>
